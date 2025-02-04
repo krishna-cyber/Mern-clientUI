@@ -7,6 +7,8 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
+import "@fontsource-variable/manrope";
+
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -22,7 +24,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: { readonly children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
