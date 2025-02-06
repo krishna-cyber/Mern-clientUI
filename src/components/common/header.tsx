@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { Phone, ShoppingCart } from "lucide-react";
+import { Button } from "../ui/button";
 
 const Header = () => {
   return (
@@ -53,10 +54,14 @@ const Header = () => {
         <div className=" flex space-x-3">
           <ul className=" list-none flex gap-3">
             <li>
-              <Link href={"/menu"}>Menu</Link>
+              <Link className="hover:text-primary" href={"/menu"}>
+                Menu
+              </Link>
             </li>
             <li>
-              <Link href={"/orders"}>Orders</Link>
+              <Link className="hover:text-primary" href={"/orders"}>
+                Orders
+              </Link>
             </li>
           </ul>
           <Link
@@ -68,6 +73,13 @@ const Header = () => {
               8
             </div>
           </Link>
+          <div className=" flex space-x-2 items-center">
+            <Phone className=" inline-block" />
+            <p>+977-9868880218</p>
+            <Button size={"sm"} className=" h-7  py-1">
+              logout
+            </Button>
+          </div>
         </div>
       </nav>
     </header>
