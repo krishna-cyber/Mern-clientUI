@@ -1,6 +1,34 @@
+import ProductCard, { Product } from "@/components/common/productCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
+
+const products: Product[] = [
+  {
+    _id: "1",
+    name: "Millet Pizza",
+    description: "This is a very tasty pizza.",
+    image: "/pizza-main.png",
+  },
+  {
+    _id: "2",
+    name: "Millet Pizza",
+    description: "This is a very tasty pizza.",
+    image: "/pizza-main.png",
+  },
+  {
+    _id: "3",
+    name: "Millet Pizza",
+    description: "This is a very tasty pizza.",
+    image: "/pizza-main.png",
+  },
+  {
+    _id: "4",
+    name: "Millet Pizza",
+    description: "This is a very tasty pizza.",
+    image: "/pizza-main.png",
+  },
+];
 
 export default function Home() {
   return (
@@ -30,13 +58,26 @@ export default function Home() {
       </section>
       <section>
         <div className=" container mx-auto">
-          <Tabs defaultValue="Pizza" className="w-[400px]">
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs defaultValue="pizza">
+            <TabsList className="grid w-fit grid-cols-2 ">
               <TabsTrigger value="pizza">Pizza</TabsTrigger>
               <TabsTrigger value="bevrages">Bevrages</TabsTrigger>
             </TabsList>
-            <TabsContent value="pizza">first contenet</TabsContent>
-            <TabsContent value="bevrages">second contenet</TabsContent>
+            <TabsContent value="pizza">
+              <div className=" grid grid-cols-4 gap-6 mt-6">
+                {products.map((product) => {
+                  return <ProductCard product={product} key={product._id} />;
+                })}
+              </div>
+            </TabsContent>
+            <TabsContent value="bevrages">
+              {/* Bevrages  */}
+              <div className=" grid grid-cols-4 gap-6 mt-6">
+                {products.map((product) => {
+                  return <ProductCard product={product} key={product._id} />;
+                })}
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
       </section>
