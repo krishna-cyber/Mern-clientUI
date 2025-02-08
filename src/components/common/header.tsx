@@ -29,8 +29,6 @@ const Header = async () => {
   const data = await response.json();
   const result: Resturants[] = data?.result;
 
-  console.log(result);
-
   return (
     <header className=" bg-white">
       <nav className=" container mx-auto py-4 space-y-4 flex justify-between">
