@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Select,
   SelectContent,
@@ -11,8 +12,25 @@ import {
 import Link from "next/link";
 import { Phone, ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
+import { Resturants } from "@/lib/types";
 
-const Header = () => {
+const Header = async () => {
+  const response = await fetch(
+    `${process.env.API_URL}/api/auth/tenants/lists`,
+    {
+      next: { revalidate: 3600 },
+    }
+  );
+
+  if (!response.ok) {
+    throw Error("Failed to fetch tenant lists");
+  }
+
+  const data = await response.json();
+  const result: Resturants[] = data?.result;
+
+  console.log(result);
+
   return (
     <header className=" bg-white">
       <nav className=" container mx-auto py-4 space-y-4 flex justify-between">
@@ -41,11 +59,12 @@ const Header = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
+
+                {result.map((tenant) => (
+                  <SelectItem key={tenant._id} value={tenant._id}>
+                    {tenant.name}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
