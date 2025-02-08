@@ -5,3 +5,8 @@ export interface Resturants {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Category {
+  _id: string;
+  name: string;
+}

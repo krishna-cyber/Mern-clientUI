@@ -1,6 +1,7 @@
 import ProductCard, { Product } from "@/components/common/productCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Category } from "@/lib/types";
 import Image from "next/image";
 
 const products: Product[] = [
@@ -30,7 +31,21 @@ const products: Product[] = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const response = await fetch(
+    `${process.env.API_URL}/api/category/category/`,
+    {
+      next: { revalidate: 3600 },
+    }
+  );
+
+  if (!response.ok) {
+    throw Error("Failed to fetch category lists");
+  }
+
+  const data = await response.json();
+  const result: Category[] = data?.result;
+
   return (
     <>
       <section className=" bg-white  ">
@@ -58,19 +73,22 @@ export default function Home() {
       </section>
       <section>
         <div className=" container mx-auto">
-          <Tabs defaultValue="pizza">
+          <Tabs defaultValue={result[0]._id}>
             <TabsList className="grid w-fit grid-cols-2 ">
-              <TabsTrigger value="pizza">Pizza</TabsTrigger>
-              <TabsTrigger value="bevrages">Bevrages</TabsTrigger>
+              {result.map((category) => (
+                <TabsTrigger key={category._id} value={category._id}>
+                  {category.name}
+                </TabsTrigger>
+              ))}
             </TabsList>
-            <TabsContent value="pizza">
+            <TabsContent value={result[0]._id}>
               <div className=" grid grid-cols-4 gap-6 mt-6">
                 {products.map((product) => {
                   return <ProductCard product={product} key={product._id} />;
                 })}
               </div>
             </TabsContent>
-            <TabsContent value="bevrages">
+            <TabsContent value={result[1]._id}>
               {/* Bevrages  */}
               <div className=" grid grid-cols-4 gap-6 mt-6">
                 {products.map((product) => {
