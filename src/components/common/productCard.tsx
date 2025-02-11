@@ -8,6 +8,7 @@ import { Label } from "../ui/label";
 import ToppingCard, { Topping } from "./toppingCard";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
+import { ProductType } from "@/lib/types";
 
 export interface Product {
   _id: string;
@@ -17,7 +18,7 @@ export interface Product {
 }
 
 interface PropType {
-  product: Product;
+  product: ProductType;
 }
 
 const toppings: Topping[] = [
@@ -38,14 +39,14 @@ const ProductCard = ({ product }: PropType) => {
     <Card className=" w-lg rounded-lg">
       <CardHeader>
         <Image
-          src={product.image}
-          alt={product.name}
+          src={product?.image[0]}
+          alt={product?.name}
           height={140}
           width={140}
         />
       </CardHeader>
       <CardContent>
-        <h1 className=" text-2xl font-bold ">{product.name}</h1>
+        <h1 className=" text-2xl font-bold ">{product?.name}</h1>
         <p>{product.description}</p>
       </CardContent>
       <CardFooter className=" flex justify-between items-center">
@@ -59,9 +60,9 @@ const ProductCard = ({ product }: PropType) => {
           </DialogTrigger>
           <DialogContent className=" max-w-3xl">
             <div className=" flex justify-between">
-              <div className=" w-1/3 bg-white p-6 rounded-md ">
+              <div className=" w-1/3 bg-white p-6 rounded-md flex justify-center items-center ">
                 <Image
-                  src={product.image}
+                  src={product?.image[0]}
                   width={400}
                   height={400}
                   alt={product.name}

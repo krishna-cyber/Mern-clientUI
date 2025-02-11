@@ -1,51 +1,10 @@
-import ProductCard, { Product } from "@/components/common/productCard";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Category } from "@/lib/types";
 import Image from "next/image";
-
-const products: Product[] = [
-  {
-    _id: "1",
-    name: "Millet Pizza",
-    description: "This is a very tasty pizza.",
-    image: "/pizza-main.png",
-  },
-  {
-    _id: "2",
-    name: "Millet Pizza",
-    description: "This is a very tasty pizza.",
-    image: "/pizza-main.png",
-  },
-  {
-    _id: "3",
-    name: "Millet Pizza",
-    description: "This is a very tasty pizza.",
-    image: "/pizza-main.png",
-  },
-  {
-    _id: "4",
-    name: "Millet Pizza",
-    description: "This is a very tasty pizza.",
-    image: "/pizza-main.png",
-  },
-];
+import { Suspense } from "react";
+import CategoriesAndProduct from "./components/categoriesAndProductTabs";
+import ProductSkeleton from "@/components/common/productSkeleton";
 
 export default async function Home() {
-  const response = await fetch(
-    `${process.env.API_URL}/api/category/category/`,
-    {
-      next: { revalidate: 3600 },
-    }
-  );
-
-  if (!response.ok) {
-    throw Error("Failed to fetch category lists");
-  }
-
-  const data = await response.json();
-  const result: Category[] = data?.result;
-
   return (
     <>
       <section className=" bg-white  ">
@@ -73,30 +32,9 @@ export default async function Home() {
       </section>
       <section>
         <div className=" container mx-auto">
-          <Tabs defaultValue={result[0]._id}>
-            <TabsList className="grid w-fit grid-cols-2 ">
-              {result.map((category) => (
-                <TabsTrigger key={category._id} value={category._id}>
-                  {category.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <TabsContent value={result[0]._id}>
-              <div className=" grid grid-cols-4 gap-6 mt-6">
-                {products.map((product) => {
-                  return <ProductCard product={product} key={product._id} />;
-                })}
-              </div>
-            </TabsContent>
-            <TabsContent value={result[1]._id}>
-              {/* Bevrages  */}
-              <div className=" grid grid-cols-4 gap-6 mt-6">
-                {products.map((product) => {
-                  return <ProductCard product={product} key={product._id} />;
-                })}
-              </div>
-            </TabsContent>
-          </Tabs>
+          <Suspense fallback={<ProductSkeleton />}>
+            <CategoriesAndProduct />
+          </Suspense>
         </div>
       </section>
     </>
