@@ -29,8 +29,10 @@ const CategoriesAndProduct = async () => {
   if (!productResponse.ok) {
     throw Error(`Failed to fetch product lists`);
   }
+
   const product = await productResponse.json();
   const productResult: ProductType[] = product?.result;
+
   return (
     <Tabs defaultValue={categoryResult[0]._id}>
       <TabsList className="grid w-fit grid-cols-2 ">
@@ -46,7 +48,7 @@ const CategoriesAndProduct = async () => {
           <TabsContent key={category._id} value={category._id}>
             <div className=" grid grid-cols-4 gap-6 mt-6">
               {productResult
-                .filter((product) => product.categoryId == category._id)
+                .filter((product) => product.categoryId._id == category._id)
                 .map((product) => {
                   return <ProductCard product={product} key={product._id} />;
                 })}
