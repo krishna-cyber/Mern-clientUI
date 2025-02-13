@@ -86,7 +86,7 @@ const ProductModal = ({ product }: { product: ProductType }) => {
               <h4 className="mt-6">Choose the Size</h4>
 
               <RadioGroup className="grid grid-cols-3 gap-4 mt-2">
-                <div>
+                <span>
                   <RadioGroupItem
                     value={"small"}
                     id={"small"}
@@ -99,8 +99,8 @@ const ProductModal = ({ product }: { product: ProductType }) => {
                   >
                     {"Small"}
                   </Label>
-                </div>
-                <div>
+                </span>
+                <span>
                   <RadioGroupItem
                     value={"medium"}
                     id={"medium"}
@@ -113,9 +113,9 @@ const ProductModal = ({ product }: { product: ProductType }) => {
                   >
                     {"Medium"}
                   </Label>
-                </div>
+                </span>
 
-                <div>
+                <span>
                   <RadioGroupItem
                     value={"large"}
                     id={"large"}
@@ -128,7 +128,7 @@ const ProductModal = ({ product }: { product: ProductType }) => {
                   >
                     {"Large"}
                   </Label>
-                </div>
+                </span>
               </RadioGroup>
             </div>
             <div>
