@@ -3,45 +3,19 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ShoppingCart } from "lucide-react";
-import React, { useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import { ProductType } from "@/lib/types";
 import ToppingCard, { Topping } from "@/components/common/toppingCard";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface Props {
   product: ProductType;
-  // hanldeSelectedToppings: () => void;
 }
-
-const toppings = [
-  {
-    _id: "67b48d8a00a2470574288087",
-    name: "Mushroom",
-    image:
-      "https://ik.imagekit.io/kmnun0v9j/1739885959601-topping_veg_fresh_mushrooms-1930028983_U4kl58pGr.png",
-    price: 100,
-    tenantId: "67724bc52d0950ec5992c3fb",
-  },
-  {
-    _id: "67b48d9c00a2470574288089",
-    name: "Chicken",
-    image:
-      "https://ik.imagekit.io/kmnun0v9j/1739885978509-fast-food-icons-freefried-chicken_107424-2620383821_MSBbpoO4t.png",
-    price: 150,
-    tenantId: "67724bc52d0950ec5992c3fb",
-  },
-  {
-    _id: "67b48daa00a247057428808b",
-    name: "Cheese",
-    image:
-      "https://ik.imagekit.io/kmnun0v9j/1739885992361-4063297-1615242511__1__i62fKBvM4.png",
-    price: 80,
-    tenantId: "67724bc52d0950ec5992c3fb",
-  },
-];
 
 const ProductModal = ({ product }: Props) => {
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+  const [toppings, setToppings] = useState<Topping[]>([]);
 
   const handleSelectedToppings = (topping: Topping) => {
     setSelectedToppings(
@@ -52,12 +26,21 @@ const ProductModal = ({ product }: Props) => {
     );
   };
 
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/category/topping`)
+      .then((res) => res.json())
+      .then((data) => {
+        setToppings(data.result);
+      });
+  }, []);
+
   return (
     <Dialog>
       <DialogTrigger className=" h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
         Choose
       </DialogTrigger>
       <DialogContent className=" max-w-3xl">
+        <DialogTitle />
         <div className=" flex justify-between">
           <div className=" w-1/3 bg-white p-6 rounded-md flex justify-center items-center ">
             <Image
@@ -175,24 +158,26 @@ const ProductModal = ({ product }: Props) => {
               </RadioGroup>
             </div>
 
-            {product.categoryId.name == "Pizza" && (
-              <div>
-                <h4 className="mt-6">Choose the Toppings</h4>
+            <Suspense fallback={"Loading..."}>
+              {product.categoryId.name == "Pizza" && (
+                <div>
+                  <h4 className="mt-6">Choose the Toppings</h4>
 
-                <div className=" grid grid-cols-3 gap-4 mt-2">
-                  {toppings.map((topping: Topping) => {
-                    return (
-                      <ToppingCard
-                        key={topping._id}
-                        topping={topping}
-                        selectedToppings={selectedToppings}
-                        handleCheckBoxCheck={handleSelectedToppings}
-                      />
-                    );
-                  })}
+                  <div className=" grid grid-cols-3 gap-4 mt-2">
+                    {toppings.map((topping: Topping) => {
+                      return (
+                        <ToppingCard
+                          key={topping._id}
+                          topping={topping}
+                          selectedToppings={selectedToppings}
+                          handleCheckBoxCheck={handleSelectedToppings}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </Suspense>
 
             <div className=" flex justify-between mt-6">
               <span className=" font-bold">&#8377; 500</span>
