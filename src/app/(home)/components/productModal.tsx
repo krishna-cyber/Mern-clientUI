@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,7 @@ import Image from "next/image";
 import { ProductType } from "@/lib/types";
 import ToppingCard, { Topping } from "@/components/common/toppingCard";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import _ from "lodash";
 
 interface Props {
   product: ProductType;
@@ -16,6 +18,12 @@ interface Props {
 const ProductModal = ({ product }: Props) => {
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
   const [toppings, setToppings] = useState<Topping[]>([]);
+
+  const keys = _.keys(product.priceConfiguration);
+
+  const avilableOptions = keys.map((key) => {
+    return product.priceConfiguration[key]?.avilableOptions;
+  });
 
   const handleSelectedToppings = (topping: Topping) => {
     setSelectedToppings(
@@ -54,61 +62,33 @@ const ProductModal = ({ product }: Props) => {
             <h2 className=" text-2xl font-bold">{product.name}</h2>
             <h4>{product.description}</h4>
 
-            {/* {keys.map((key) => {
-              return (
-                <div key={key}>
-                  <h4 className="mt-6">Choose the {key}</h4>
+            {keys.map((key, index) => (
+              <div key={key}>
+                <h4 className="mt-6">Choose the {_.capitalize(key)}</h4>
+                <RadioGroup className="grid grid-cols-3 gap-4 mt-2">
+                  {Object.entries(avilableOptions[index]).map(
+                    ([key, price]) => (
+                      <span key={key}>
+                        <RadioGroupItem
+                          value={price}
+                          id={key}
+                          className="peer sr-only "
+                          aria-label={_.capitalize(key)}
+                        />
+                        <Label
+                          htmlFor={key}
+                          className="flex flex-col items-center text-md justify-between rounded-md border-2 bg-white py-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        >
+                          {_.capitalize(key)}
+                        </Label>
+                      </span>
+                    )
+                  )}
+                </RadioGroup>
+              </div>
+            ))}
 
-                  <RadioGroup className="grid grid-cols-3 gap-4 mt-2">
-                    <div>
-                      <RadioGroupItem
-                        value={"small"}
-                        id={"small"}
-                        className="peer sr-only"
-                        aria-label={"Small"}
-                      />
-                      <Label
-                        htmlFor={"small"}
-                        className="flex flex-col items-center text-md justify-between rounded-md border-2 bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        {"Small"}
-                      </Label>
-                    </div>
-                    <div>
-                      <RadioGroupItem
-                        value={"medium"}
-                        id={"medium"}
-                        className="peer sr-only "
-                        aria-label={"Medium"}
-                      />
-                      <Label
-                        htmlFor={"medium"}
-                        className="flex flex-col items-center text-md justify-between rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        {"Medium"}
-                      </Label>
-                    </div>
-
-                    <div>
-                      <RadioGroupItem
-                        value={"large"}
-                        id={"large"}
-                        className="peer sr-only"
-                        aria-label={"Large"}
-                      />
-                      <Label
-                        htmlFor={"large"}
-                        className="flex flex-col items-center text-md justify-between rounded-md border-2  bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                      >
-                        {"Large"}
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              );
-            })} */}
-
-            <div>
+            {/* <div>
               <h4 className="mt-6">Choose the Size</h4>
 
               <RadioGroup className="grid grid-cols-3 gap-4 mt-2">
@@ -156,7 +136,7 @@ const ProductModal = ({ product }: Props) => {
                   </Label>
                 </span>
               </RadioGroup>
-            </div>
+            </div> */}
 
             <Suspense fallback={"Loading..."}>
               {product.categoryId.name == "Pizza" && (
