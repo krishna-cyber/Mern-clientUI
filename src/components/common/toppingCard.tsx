@@ -4,10 +4,11 @@ import React from "react";
 import { Button } from "../ui/button";
 import { CircleCheck } from "lucide-react";
 export type Topping = {
-  id: string;
+  _id: string;
   name: string;
   price: number;
   image: string;
+  tenantId: string;
 };
 
 interface ToppingCardProps {
@@ -22,7 +23,7 @@ const ToppingCard = ({
   handleCheckBoxCheck,
 }: ToppingCardProps) => {
   const isCurrentSelected = selectedToppings.some((element) => {
-    return element.id == topping.id;
+    return element._id == topping._id;
   });
 
   return (

@@ -1,13 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
-import ToppingCard, { Topping } from "./toppingCard";
-import { Button } from "../ui/button";
-import { ShoppingCart } from "lucide-react";
 import { ProductType } from "@/lib/types";
 import _ from "lodash";
 import ProductModal from "@/app/(home)/components/productModal";
@@ -23,20 +17,7 @@ interface PropType {
   product: ProductType;
 }
 
-const toppings: Topping[] = [
-  { id: "1", image: "/cheese.png", name: "cheese", price: 500 },
-  { id: "2", image: "/mushroom.png", name: "mushroom", price: 500 },
-  { id: "3", image: "/chicken.png", name: "chicken", price: 500 },
-  { id: "4", image: "/jelapeno.png", name: "jelapano", price: 500 },
-];
 const ProductCard = ({ product }: PropType) => {
-  const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
-  const handleCheckBoxCheck = (topping: Topping) => {
-    setSelectedToppings((prev) => {
-      return [...prev, topping];
-    });
-  };
-
   const keys = _.keys(product.priceConfiguration);
 
   const avilableOptions = keys.map((key) => {
