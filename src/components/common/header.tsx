@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Phone, ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 import { Resturants } from "@/lib/types";
+import CartMenu from "./cartMenu";
 
 const Header = async () => {
   const response = await fetch(
@@ -81,15 +82,7 @@ const Header = async () => {
               </Link>
             </li>
           </ul>
-          <Link
-            href={"/cart"}
-            className=" relative cursor-pointer hover:text-primary"
-          >
-            <ShoppingCart />
-            <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-              8
-            </div>
-          </Link>
+          <CartMenu />
           <div className=" flex space-x-2 items-center">
             <Phone className=" inline-block" />
             <p>+977-9868880218</p>

@@ -34,6 +34,11 @@ const ProductModal = ({ product }: Props) => {
     );
   };
 
+  const handleCart = () => {
+    //Todo
+    console.log(`Adding to cart ....`);
+  };
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/category/topping`)
       .then((res) => res.json())
@@ -161,7 +166,7 @@ const ProductModal = ({ product }: Props) => {
 
             <div className=" flex justify-between mt-6">
               <span className=" font-bold">&#8377; 500</span>
-              <Button className=" text-lg">
+              <Button className=" text-lg" onClick={handleCart}>
                 <ShoppingCart size={20} />
                 Add to cart
               </Button>
