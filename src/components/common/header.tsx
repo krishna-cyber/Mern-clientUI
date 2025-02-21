@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import Link from "next/link";
-import { Phone, ShoppingCart } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Resturants } from "@/lib/types";
 import CartMenu from "./cartMenu";
