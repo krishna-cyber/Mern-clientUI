@@ -19,6 +19,10 @@ const ProductModal = ({ product }: Props) => {
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
   const [toppings, setToppings] = useState<Topping[]>([]);
 
+  const [selectedConfiguration, setSelectedConfiguration] = useState<{
+    [key: string]: string;
+  }>();
+
   const keys = _.keys(product.priceConfiguration);
 
   const avilableOptions = keys.map((key) => {
@@ -47,6 +51,14 @@ const ProductModal = ({ product }: Props) => {
       });
   }, []);
 
+  const handlePriceConfiguration = (key: string, value: string) => {
+    console.log(key, value);
+
+    setSelectedConfiguration((prev) => {
+      return { ...prev, [key]: value };
+    });
+  };
+
   return (
     <Dialog>
       <DialogTrigger className=" h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
@@ -70,7 +82,12 @@ const ProductModal = ({ product }: Props) => {
             {keys.map((key, index) => (
               <div key={key}>
                 <h4 className="mt-6">Choose the {_.capitalize(key)}</h4>
-                <RadioGroup className="grid grid-cols-3 gap-4 mt-2">
+                <RadioGroup
+                  onValueChange={(data) => {
+                    handlePriceConfiguration(key, data);
+                  }}
+                  className="grid grid-cols-3 gap-4 mt-2"
+                >
                   {Object.entries(avilableOptions[index]).map(
                     ([key, price]) => (
                       <span key={key}>
@@ -92,56 +109,6 @@ const ProductModal = ({ product }: Props) => {
                 </RadioGroup>
               </div>
             ))}
-
-            {/* <div>
-              <h4 className="mt-6">Choose the Size</h4>
-
-              <RadioGroup className="grid grid-cols-3 gap-4 mt-2">
-                <span>
-                  <RadioGroupItem
-                    value={"small"}
-                    id={"small"}
-                    className="peer sr-only "
-                    aria-label={"Small"}
-                  />
-                  <Label
-                    htmlFor={"small"}
-                    className="flex flex-col items-center text-md justify-between rounded-md border-2 bg-white py-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    {"Small"}
-                  </Label>
-                </span>
-                <span>
-                  <RadioGroupItem
-                    value={"medium"}
-                    id={"medium"}
-                    className="peer sr-only "
-                    aria-label={"Medium"}
-                  />
-                  <Label
-                    htmlFor={"medium"}
-                    className="flex flex-col items-center text-md justify-between rounded-md border-2  bg-white py-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    {"Medium"}
-                  </Label>
-                </span>
-
-                <span>
-                  <RadioGroupItem
-                    value={"large"}
-                    id={"large"}
-                    className="peer sr-only"
-                    aria-label={"Large"}
-                  />
-                  <Label
-                    htmlFor={"large"}
-                    className="flex flex-col items-center text-md justify-between rounded-md border-2  bg-white py-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    {"Large"}
-                  </Label>
-                </span>
-              </RadioGroup>
-            </div> */}
 
             <Suspense fallback={"Loading..."}>
               {product.categoryId.name == "Pizza" && (
