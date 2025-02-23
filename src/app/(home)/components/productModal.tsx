@@ -10,20 +10,40 @@ import { ProductType } from "@/lib/types";
 import ToppingCard, { Topping } from "@/components/common/toppingCard";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import _ from "lodash";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { addToCart } from "@/lib/store/feature/cartSlice";
+import { preinit } from "react-dom";
 
 interface Props {
   product: ProductType;
 }
 
 const ProductModal = ({ product }: Props) => {
+  const dispatch = useAppDispatch();
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
   const [toppings, setToppings] = useState<Topping[]>([]);
 
+  const keys = _.keys(product.priceConfiguration);
+
+  const defaultPriceConfiguration = keys
+    .map((key) => {
+      const defaultKey = _.keys(
+        product.priceConfiguration[key].avilableOptions
+      )[0];
+
+      return {
+        [key]: defaultKey,
+      };
+    })
+    .reduce((acc, item) => {
+      return { ...acc, ...item };
+    }, {});
+
+  console.log(`default price configuration`, defaultPriceConfiguration);
+
   const [selectedConfiguration, setSelectedConfiguration] = useState<{
     [key: string]: string;
-  }>();
-
-  const keys = _.keys(product.priceConfiguration);
+  }>(defaultPriceConfiguration);
 
   const avilableOptions = keys.map((key) => {
     return product.priceConfiguration[key]?.avilableOptions;
@@ -39,7 +59,9 @@ const ProductModal = ({ product }: Props) => {
   };
 
   const handleCart = () => {
-    //Todo
+    // //Todo
+    // const cartItem = [];
+    // dispatch(addToCart());
     console.log(`Adding to cart ....`);
   };
 
@@ -83,6 +105,13 @@ const ProductModal = ({ product }: Props) => {
               <div key={key}>
                 <h4 className="mt-6">Choose the {_.capitalize(key)}</h4>
                 <RadioGroup
+                  defaultValue={
+                    product.priceConfiguration[key].avilableOptions[
+                      _.keys(
+                        product.priceConfiguration[key].avilableOptions
+                      )[0] as unknown as number
+                    ]
+                  }
                   onValueChange={(data) => {
                     handlePriceConfiguration(key, data);
                   }}

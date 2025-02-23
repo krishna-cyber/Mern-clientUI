@@ -1,24 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Product } from "@/components/common/productCard";
+import { Topping } from "@/components/common/toppingCard";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface CartItem {
+  product: Product;
+  chosenConfiguration: {
+    [key: string]: string;
+  };
+  selectedToppings: Topping[];
+  qty: number;
+}
 export interface CartState {
-  value: number;
+  cartItems: CartItem[];
 }
 
 const initialState: CartState = {
-  value: 0,
+  cartItems: [],
 };
 
 export const cartSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      state.cartItems.push(action.payload);
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment } = cartSlice.actions;
+export const { addToCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
