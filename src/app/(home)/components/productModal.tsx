@@ -11,8 +11,7 @@ import ToppingCard, { Topping } from "@/components/common/toppingCard";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import _ from "lodash";
 import { useAppDispatch } from "@/lib/store/hooks";
-import { addToCart } from "@/lib/store/feature/cartSlice";
-import { preinit } from "react-dom";
+import { addToCart, CartItem } from "@/lib/store/feature/cartSlice";
 
 interface Props {
   product: ProductType;
@@ -22,6 +21,7 @@ const ProductModal = ({ product }: Props) => {
   const dispatch = useAppDispatch();
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
   const [toppings, setToppings] = useState<Topping[]>([]);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const keys = _.keys(product.priceConfiguration);
 
@@ -58,11 +58,16 @@ const ProductModal = ({ product }: Props) => {
     );
   };
 
-  const handleCart = () => {
-    // //Todo
-    // const cartItem = [];
-    // dispatch(addToCart());
-    console.log(`Adding to cart ....`);
+  const handleAddToCart = (qty: number) => {
+    const itemToAdd: CartItem = {
+      product,
+      chosenConfiguration: selectedConfiguration,
+      ...(selectedToppings && { selectedToppings }),
+      qty,
+    };
+    dispatch(addToCart(itemToAdd));
+
+    setDialogOpen(!dialogOpen);
   };
 
   useEffect(() => {
@@ -82,7 +87,7 @@ const ProductModal = ({ product }: Props) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger className=" h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
         Choose
       </DialogTrigger>
@@ -162,7 +167,7 @@ const ProductModal = ({ product }: Props) => {
 
             <div className=" flex justify-between mt-6">
               <span className=" font-bold">&#8377; 500</span>
-              <Button className=" text-lg" onClick={handleCart}>
+              <Button className=" text-lg" onClick={() => handleAddToCart(1)}>
                 <ShoppingCart size={20} />
                 Add to cart
               </Button>
