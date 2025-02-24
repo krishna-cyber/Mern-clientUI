@@ -1,13 +1,13 @@
-import { Product } from "@/components/common/productCard";
 import { Topping } from "@/components/common/toppingCard";
+import { ProductType } from "@/lib/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartItem {
-  product: Product;
+  product: ProductType;
   chosenConfiguration: {
     [key: string]: string;
   };
-  selectedToppings: Topping[];
+  selectedToppings?: Topping[];
   qty: number;
 }
 export interface CartState {
@@ -23,7 +23,19 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      state.cartItems.push(action.payload);
+      return {
+        cartItems: [
+          ...state.cartItems,
+          {
+            product: action.payload.product,
+            chosenConfiguration: action.payload.chosenConfiguration,
+            qty: action.payload.qty,
+            ...(action.payload.selectedToppings && {
+              selectedToppings: action.payload.selectedToppings,
+            }),
+          },
+        ],
+      };
     },
   },
 });
