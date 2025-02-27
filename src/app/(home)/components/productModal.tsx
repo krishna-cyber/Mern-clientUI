@@ -39,8 +39,6 @@ const ProductModal = ({ product }: Props) => {
       return { ...acc, ...item };
     }, {});
 
-  console.log(`default price configuration`, defaultPriceConfiguration);
-
   const [selectedConfiguration, setSelectedConfiguration] = useState<{
     [key: string]: string;
   }>(defaultPriceConfiguration);
@@ -66,7 +64,7 @@ const ProductModal = ({ product }: Props) => {
       qty,
     };
     dispatch(addToCart(itemToAdd));
-
+    setSelectedToppings([]);
     setDialogOpen(!dialogOpen);
   };
 
@@ -79,8 +77,6 @@ const ProductModal = ({ product }: Props) => {
   }, []);
 
   const handlePriceConfiguration = (key: string, value: string) => {
-    console.log(key, value);
-
     setSelectedConfiguration((prev) => {
       return { ...prev, [key]: value };
     });

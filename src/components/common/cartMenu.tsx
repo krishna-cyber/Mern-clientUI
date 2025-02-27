@@ -3,7 +3,6 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-
 const CartMenu = () => {
   const cartItems = useAppSelector((state) => state.cart?.cartItems);
   return (
