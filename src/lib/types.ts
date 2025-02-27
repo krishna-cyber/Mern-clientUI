@@ -12,6 +12,7 @@ export interface Category {
   updatedAt: string;
   createdAt: string;
   attributes: string[];
+  hasToppings: boolean;
 }
 
 interface ConfigurationOptions {

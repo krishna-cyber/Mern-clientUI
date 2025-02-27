@@ -141,7 +141,7 @@ const ProductModal = ({ product }: Props) => {
             ))}
 
             <Suspense fallback={"Loading..."}>
-              {product.categoryId.name == "Pizza" && (
+              {product.categoryId.hasToppings && (
                 <div>
                   <h4 className="mt-6">Choose the Toppings</h4>
 
