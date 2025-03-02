@@ -12,6 +12,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import _ from "lodash";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { addToCart, CartItem } from "@/lib/store/feature/cartSlice";
+import { toast } from "sonner";
 
 interface Props {
   product: ProductType;
@@ -67,6 +68,11 @@ const ProductModal = ({ product }: Props) => {
     dispatch(addToCart(itemToAdd));
     setSelectedToppings([]);
     setDialogOpen(!dialogOpen);
+    toast.success("Item added to cart", {
+      description() {
+        return product.name;
+      },
+    });
   };
 
   useEffect(() => {
