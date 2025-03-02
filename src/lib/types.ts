@@ -17,8 +17,7 @@ export interface Category {
 
 interface ConfigurationOptions {
   [key: string]: {
-    avilableOptions: [key: string];
-    _id: string;
+    avilableOptions: { [key: string]: string };
   };
 }
 

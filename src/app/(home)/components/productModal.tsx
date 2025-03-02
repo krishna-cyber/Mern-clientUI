@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ShoppingCart } from "lucide-react";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ProductType } from "@/lib/types";
 import ToppingCard, { Topping } from "@/components/common/toppingCard";
@@ -42,6 +42,7 @@ const ProductModal = ({ product }: Props) => {
   const [selectedConfiguration, setSelectedConfiguration] = useState<{
     [key: string]: string;
   }>(defaultPriceConfiguration);
+  console.log(`selectedConfiguration Default,`, selectedConfiguration);
 
   const avilableOptions = keys.map((key) => {
     return product.priceConfiguration[key]?.avilableOptions;
@@ -82,6 +83,27 @@ const ProductModal = ({ product }: Props) => {
     });
   };
 
+  const totalPrice = useMemo(() => {
+    const toppingTotalPrice = selectedToppings.reduce(
+      (accumulator, currentValue) => {
+        return +currentValue.price + accumulator;
+      },
+      0
+    );
+
+    const totalConfigurationPrice = Object.entries(selectedConfiguration);
+    const totalConfigurationPrice1 = totalConfigurationPrice.reduce(
+      (accumulator, [key, value]) => {
+        const getPrice = product.priceConfiguration[key].avilableOptions[value];
+        console.log(`getprice`, getPrice);
+        return +getPrice + accumulator;
+      },
+      0
+    );
+    console.log(`totalConfigurationPrice`, totalConfigurationPrice);
+    return toppingTotalPrice + totalConfigurationPrice1;
+  }, [selectedConfiguration, selectedToppings]);
+
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger className=" h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
@@ -107,35 +129,29 @@ const ProductModal = ({ product }: Props) => {
                 <h4 className="mt-6">Choose the {_.capitalize(key)}</h4>
                 <RadioGroup
                   defaultValue={
-                    product.priceConfiguration[key].avilableOptions[
-                      _.keys(
-                        product.priceConfiguration[key].avilableOptions
-                      )[0] as unknown as number
-                    ]
+                    _.keys(product.priceConfiguration[key].avilableOptions)[0]
                   }
                   onValueChange={(data) => {
                     handlePriceConfiguration(key, data);
                   }}
                   className="grid grid-cols-3 gap-4 mt-2"
                 >
-                  {Object.entries(avilableOptions[index]).map(
-                    ([key, price]) => (
-                      <span key={key}>
-                        <RadioGroupItem
-                          value={price}
-                          id={key}
-                          className="peer sr-only "
-                          aria-label={_.capitalize(key)}
-                        />
-                        <Label
-                          htmlFor={key}
-                          className="flex flex-col items-center text-md justify-between rounded-md border-2 bg-white py-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                        >
-                          {_.capitalize(key)}
-                        </Label>
-                      </span>
-                    )
-                  )}
+                  {Object.entries(avilableOptions[index]).map(([key]) => (
+                    <span key={key}>
+                      <RadioGroupItem
+                        value={key}
+                        id={key}
+                        className="peer sr-only "
+                        aria-label={_.capitalize(key)}
+                      />
+                      <Label
+                        htmlFor={key}
+                        className="flex flex-col items-center text-md justify-between rounded-md border-2 bg-white py-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      >
+                        {_.capitalize(key)}
+                      </Label>
+                    </span>
+                  ))}
                 </RadioGroup>
               </div>
             ))}
@@ -162,7 +178,7 @@ const ProductModal = ({ product }: Props) => {
             </Suspense>
 
             <div className=" flex justify-between mt-6">
-              <span className=" font-bold">&#8377; 500</span>
+              <span className=" font-bold">&#8377; {totalPrice}</span>
               <Button className=" text-lg" onClick={() => handleAddToCart(1)}>
                 <ShoppingCart size={20} />
                 Add to cart
