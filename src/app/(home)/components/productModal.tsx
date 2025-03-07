@@ -6,13 +6,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ShoppingCart } from "lucide-react";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ProductType } from "@/lib/types";
-import ToppingCard, { Topping } from "@/components/common/toppingCard";
+import { ProductType, Topping } from "@/lib/types";
+import ToppingCard from "@/components/common/toppingCard";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import _ from "lodash";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart, CartItem } from "@/lib/store/feature/cartSlice";
 import { toast } from "sonner";
+import { hashProductCartItem } from "@/lib/utils";
 
 interface Props {
   product: ProductType;
@@ -20,6 +21,7 @@ interface Props {
 
 const ProductModal = ({ product }: Props) => {
   const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
   const [toppings, setToppings] = useState<Topping[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -43,7 +45,6 @@ const ProductModal = ({ product }: Props) => {
   const [selectedConfiguration, setSelectedConfiguration] = useState<{
     [key: string]: string;
   }>(defaultPriceConfiguration);
-  console.log(`selectedConfiguration Default,`, selectedConfiguration);
 
   const avilableOptions = keys.map((key) => {
     return product.priceConfiguration[key]?.avilableOptions;
@@ -58,12 +59,12 @@ const ProductModal = ({ product }: Props) => {
     );
   };
 
-  const handleAddToCart = (qty: number) => {
+  const handleAddToCart = () => {
     const itemToAdd: CartItem = {
       product,
       chosenConfiguration: selectedConfiguration,
       ...(selectedToppings && { selectedToppings }),
-      qty,
+      qty: 1,
     };
     dispatch(addToCart(itemToAdd));
     setSelectedToppings([]);
@@ -106,9 +107,22 @@ const ProductModal = ({ product }: Props) => {
       },
       0
     );
-    console.log(`totalConfigurationPrice`, totalConfigurationPrice);
     return toppingTotalPrice + totalConfigurationPrice1;
-  }, [selectedConfiguration, selectedToppings]);
+  }, [product.priceConfiguration, selectedConfiguration, selectedToppings]);
+
+  const isProductInCart = useMemo(() => {
+    const productDetails: CartItem = {
+      product,
+      chosenConfiguration: selectedConfiguration,
+      ...(selectedToppings && { selectedToppings }),
+      qty: 1,
+    };
+
+    const productHash = hashProductCartItem(productDetails);
+
+    //condition
+    return cartItems.some((item) => item.itemHash === productHash);
+  }, [product, selectedConfiguration, selectedToppings]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -185,9 +199,19 @@ const ProductModal = ({ product }: Props) => {
 
             <div className=" flex justify-between mt-6">
               <span className=" font-bold">&#8377; {totalPrice}</span>
-              <Button className=" text-lg" onClick={() => handleAddToCart(1)}>
+              <Button
+                // className=" text-md"
+                className={
+                  isProductInCart
+                    ? "bg-green-300 text-green-800 text-md"
+                    : "text-md"
+                }
+                variant={isProductInCart ? "outline" : "default"}
+                disabled={isProductInCart}
+                onClick={() => handleAddToCart()}
+              >
                 <ShoppingCart size={20} />
-                Add to cart
+                {isProductInCart ? "Product is in cart" : "Add to cart"}
               </Button>
             </div>
           </div>

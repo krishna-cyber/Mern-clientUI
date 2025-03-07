@@ -17,7 +17,7 @@ export interface Category {
 
 interface ConfigurationOptions {
   [key: string]: {
-    avilableOptions: { [key: string]: string };
+    avilableOptions: { [key: string]: number };
   };
 }
 
@@ -30,4 +30,19 @@ export interface ProductType {
   categoryId: Category;
   createdAt: string;
   updatedAt: string;
+}
+
+export type Topping = {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  tenantId: string;
+};
+
+export interface HashProduct extends ProductType {
+  chosenConfiguration: {
+    [key: string]: string;
+  };
+  selectedToppings: Topping[];
 }

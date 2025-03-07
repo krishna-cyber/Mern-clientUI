@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ProductType } from "@/lib/types";
 import _ from "lodash";
 import ProductModal from "@/app/(home)/components/productModal";
+import { getMinimumProductPrice } from "@/lib/utils";
 
 export interface Product {
   _id: string;
@@ -42,7 +43,9 @@ const ProductCard = ({ product }: PropType) => {
       <CardFooter className=" flex justify-between items-center">
         <p>
           <span>From </span>
-          <span className=" font-bold">$500 </span>
+          <span className=" font-bold">
+            ${getMinimumProductPrice(product)}{" "}
+          </span>
         </p>
         <ProductModal product={product} />
       </CardFooter>

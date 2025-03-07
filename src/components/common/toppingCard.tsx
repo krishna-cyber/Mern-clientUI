@@ -3,13 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { CircleCheck } from "lucide-react";
-export type Topping = {
-  _id: string;
-  name: string;
-  price: number;
-  image: string;
-  tenantId: string;
-};
+import { Topping } from "@/lib/types";
 
 interface ToppingCardProps {
   topping: Topping;
