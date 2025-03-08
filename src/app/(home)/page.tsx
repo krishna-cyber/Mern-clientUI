@@ -6,9 +6,9 @@ import ProductSkeleton from "@/components/common/productSkeleton";
 
 export default async function Home({
   searchParams,
-}: {
-  readonly searchParams: { readonly tenantId: string };
-}) {
+}: Readonly<{
+  searchParams: { readonly tenantId: string };
+}>) {
   return (
     <>
       <section className=" bg-white  ">

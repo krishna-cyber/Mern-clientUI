@@ -2,7 +2,6 @@ import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
 import { ProductType } from "@/lib/types";
-import _ from "lodash";
 import ProductModal from "@/app/(home)/components/productModal";
 import { getMinimumProductPrice } from "@/lib/utils";
 
@@ -18,12 +17,6 @@ interface PropType {
 }
 
 const ProductCard = ({ product }: PropType) => {
-  const keys = _.keys(product.priceConfiguration);
-
-  const avilableOptions = keys.map((key) => {
-    return product.priceConfiguration[key]?.avilableOptions;
-  });
-
   return (
     <Card className=" w-lg rounded-lg">
       <CardHeader>
