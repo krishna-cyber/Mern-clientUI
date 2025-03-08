@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart, CartItem } from "@/lib/store/feature/cartSlice";
 import { toast } from "sonner";
 import { hashProductCartItem } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   product: ProductType;
@@ -21,6 +22,7 @@ interface Props {
 
 const ProductModal = ({ product }: Props) => {
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
   const [toppings, setToppings] = useState<Topping[]>([]);
@@ -77,7 +79,11 @@ const ProductModal = ({ product }: Props) => {
   };
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/category/topping`)
+    fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_URL
+      }/api/category/topping?tenantId=${searchParams.get("tenantId")}`
+    )
       .then((res) => res.json())
       .then((data) => {
         setToppings(data.result);
