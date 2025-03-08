@@ -24,8 +24,6 @@ const ProductCard = ({ product }: PropType) => {
     return product.priceConfiguration[key]?.avilableOptions;
   });
 
-  console.log(avilableOptions);
-
   return (
     <Card className=" w-lg rounded-lg">
       <CardHeader>

@@ -9,7 +9,6 @@ export default async function Home({
 }: {
   readonly searchParams: { readonly tenantId: string };
 }) {
-  console.log(searchParams);
   return (
     <>
       <section className=" bg-white  ">

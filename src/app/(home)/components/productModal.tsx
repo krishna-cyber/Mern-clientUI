@@ -102,7 +102,6 @@ const ProductModal = ({ product }: Props) => {
     const totalConfigurationPrice1 = totalConfigurationPrice.reduce(
       (accumulator, [key, value]) => {
         const getPrice = product.priceConfiguration[key].avilableOptions[value];
-        console.log(`getprice`, getPrice);
         return +getPrice + accumulator;
       },
       0
