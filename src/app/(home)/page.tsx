@@ -4,7 +4,12 @@ import { Suspense } from "react";
 import CategoriesAndProduct from "./components/categoriesAndProductTabs";
 import ProductSkeleton from "@/components/common/productSkeleton";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  readonly searchParams: { readonly tenantId: string };
+}) {
+  console.log(searchParams);
   return (
     <>
       <section className=" bg-white  ">
@@ -33,7 +38,7 @@ export default async function Home() {
       <section>
         <div className=" container mx-auto">
           <Suspense fallback={<ProductSkeleton />}>
-            <CategoriesAndProduct />
+            <CategoriesAndProduct searchParams={searchParams} />
           </Suspense>
         </div>
       </section>

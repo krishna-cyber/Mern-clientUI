@@ -1,19 +1,11 @@
 import React from "react";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Resturants } from "@/lib/types";
 import CartMenu from "./cartMenu";
+import TenantSelect from "./tenantSelect";
 
 const Header = async () => {
   const response = await fetch(
@@ -51,22 +43,8 @@ const Header = async () => {
             ></path>
           </svg>
           <p className=" font-semibold text-orange-800">Pizza Delivery </p>
-          <Select>
-            <SelectTrigger className="w-[180px] ring-0">
-              <SelectValue placeholder="Select Resturant" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
 
-                {result.map((tenant) => (
-                  <SelectItem key={tenant._id} value={tenant._id}>
-                    {tenant.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <TenantSelect tenants={result} />
         </div>
 
         <div className=" flex space-x-3">

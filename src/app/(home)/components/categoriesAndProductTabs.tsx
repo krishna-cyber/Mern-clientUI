@@ -3,7 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Category, ProductType } from "@/lib/types";
 import React from "react";
 
-const CategoriesAndProduct = async () => {
+const CategoriesAndProduct = async ({
+  searchParams,
+}: {
+  searchParams: { tenantId: string };
+}) => {
   const categoryResponse = await fetch(
     `${process.env.API_URL}/api/category/category/`,
     {
@@ -19,7 +23,7 @@ const CategoriesAndProduct = async () => {
   const categoryResult: Category[] = category?.result;
 
   const productResponse = await fetch(
-    `${process.env.API_URL}/api/category/product?currentPage=1&pageSize=100`,
+    `${process.env.API_URL}/api/category/product?currentPage=1&pageSize=100&tenantId=${searchParams.tenantId}`,
     {
       next: {
         revalidate: 3600,
