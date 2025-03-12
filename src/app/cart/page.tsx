@@ -1,5 +1,6 @@
 import React from "react";
 import CartItems from "./components/CartItems";
+import CartSummary from "./components/CartSummary";
 
 const Cart = () => {
   return (
@@ -7,6 +8,7 @@ const Cart = () => {
       <h2 className=" font-semibold text-xl">Shopping Cart</h2>
       <div className=" bg-white py-2 max-w-screen-lg mx-auto rounded-md">
         <CartItems />
+        <CartSummary />
       </div>
     </section>
   );

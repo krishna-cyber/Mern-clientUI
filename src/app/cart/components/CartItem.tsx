@@ -1,5 +1,7 @@
 import Image from "next/image";
 import React from "react";
+import { Badge } from "@/components/ui/badge";
+
 import QuantityChanger from "./QuantityChanger";
 
 const cartItem = {
@@ -16,6 +18,34 @@ const cartItem = {
   price: 12.99,
 };
 
+const ToppingsBadges = () => {
+  const { priceConfiguration } = cartItem;
+
+  return (
+    <>
+      {Object.entries(priceConfiguration).map(([key, value]) => {
+        if (key === "extraToppings" && Array.isArray(value)) {
+          return value.map((topping) => (
+            <Badge
+              className=" font-extralight text-black"
+              variant={"secondary"}
+              key={topping}
+            >
+              {topping}
+            </Badge>
+          ));
+        } else {
+          return (
+            <Badge className=" font-extralight" variant={"secondary"} key={key}>
+              {String(value)}
+            </Badge>
+          );
+        }
+      })}
+    </>
+  );
+};
+
 const CartItem = ({ item }) => {
   return (
     <>
@@ -27,7 +57,12 @@ const CartItem = ({ item }) => {
             height={100}
             src={cartItem.image}
           />
-          <h3>{cartItem.name}</h3>
+          <div className=" flex flex-col">
+            <h3 className="font-semibold">{cartItem.name}</h3>
+            <span className=" flex gap-2 flex-wrap mt-2 w-[80%]">
+              <ToppingsBadges />
+            </span>
+          </div>
         </div>
         <div>
           <QuantityChanger>{cartItem.quantity}</QuantityChanger>
