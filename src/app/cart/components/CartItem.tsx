@@ -3,6 +3,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 
 import QuantityChanger from "./QuantityChanger";
+import { CartItem as Item } from "@/lib/store/feature/cartSlice";
 
 const cartItem = {
   _id: "cartItem2",
@@ -46,19 +47,19 @@ const ToppingsBadges = () => {
   );
 };
 
-const CartItem = ({ item }) => {
+const CartItem = ({ item }: { item: Item }) => {
   return (
     <>
       <div className=" flex justify-between items-center py-2 ">
         <div className="flex items-center">
           <Image
-            alt={cartItem.name}
+            alt={item.product.name}
             width={100}
             height={100}
-            src={cartItem.image}
+            src={item.product.image[0]}
           />
           <div className=" flex flex-col">
-            <h3 className="font-semibold">{cartItem.name}</h3>
+            <h3 className="font-semibold">{item.product.name}</h3>
             <span className=" flex gap-2 flex-wrap mt-2 w-[80%]">
               <ToppingsBadges />
             </span>
