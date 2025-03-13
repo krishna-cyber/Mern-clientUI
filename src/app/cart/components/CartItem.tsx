@@ -51,7 +51,7 @@ const CartItem = ({ item }: { item: Item }) => {
   return (
     <>
       <div className=" flex justify-between items-center py-2 ">
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <Image
             alt={item.product.name}
             width={100}
