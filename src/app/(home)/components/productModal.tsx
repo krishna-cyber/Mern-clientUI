@@ -15,6 +15,7 @@ import { addToCart, CartItem } from "@/lib/store/feature/cartSlice";
 import { toast } from "sonner";
 import { hashProductCartItem } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
+import { useCalculateTotal } from "@/lib/hooks/useCalculateTotal";
 
 interface Props {
   product: ProductType;
@@ -96,24 +97,12 @@ const ProductModal = ({ product }: Props) => {
     });
   };
 
-  const totalPrice = useMemo(() => {
-    const toppingTotalPrice = selectedToppings.reduce(
-      (accumulator, currentValue) => {
-        return +currentValue.price + accumulator;
-      },
-      0
-    );
-
-    const totalConfigurationPrice = Object.entries(selectedConfiguration);
-    const totalConfigurationPrice1 = totalConfigurationPrice.reduce(
-      (accumulator, [key, value]) => {
-        const getPrice = product.priceConfiguration[key].avilableOptions[value];
-        return +getPrice + accumulator;
-      },
-      0
-    );
-    return toppingTotalPrice + totalConfigurationPrice1;
-  }, [product.priceConfiguration, selectedConfiguration, selectedToppings]);
+  const totalPrice = useCalculateTotal({
+    product,
+    chosenConfiguration: selectedConfiguration,
+    selectedToppings,
+    qty: 1,
+  });
 
   const isProductInCart = useMemo(() => {
     const productDetails: CartItem = {
