@@ -3,51 +3,51 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 
 import QuantityChanger from "./QuantityChanger";
-import { CartItem as Item } from "@/lib/store/feature/cartSlice";
+import { changeQty, CartItem as Item } from "@/lib/store/feature/cartSlice";
+import { Topping } from "@/lib/types";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { X } from "lucide-react";
 
-const cartItem = {
-  _id: "cartItem2",
-  image:
-    "https://ik.imagekit.io/kmnun0v9j/3114244c9e262162560f0655b45e12c4.jpg?updatedAt=1740145005342",
-  name: "Pepperoni Pizza",
-  priceConfiguration: {
-    size: "Large",
-    crust: "Cheese Burst",
-    extraToppings: ["Jalapenos", "Extra Cheese"],
-  },
-  quantity: 1,
-  price: 12.99,
-};
-
-const ToppingsBadges = () => {
-  const { priceConfiguration } = cartItem;
-
+const ToppingsBadges = ({
+  selectedConfiguration,
+  selectedToppings,
+}: {
+  selectedConfiguration: {
+    [key: string]: string;
+  };
+  selectedToppings: Topping[] | undefined;
+}) => {
   return (
     <>
-      {Object.entries(priceConfiguration).map(([key, value]) => {
-        if (key === "extraToppings" && Array.isArray(value)) {
-          return value.map((topping) => (
-            <Badge
-              className=" font-extralight text-black"
-              variant={"secondary"}
-              key={topping}
-            >
-              {topping}
-            </Badge>
-          ));
-        } else {
-          return (
-            <Badge className=" font-extralight" variant={"secondary"} key={key}>
-              {String(value)}
-            </Badge>
-          );
-        }
+      {Object.values(selectedConfiguration).map((value) => {
+        return (
+          <Badge
+            className=" font-extralight text-black"
+            variant={"secondary"}
+            key={value}
+          >
+            {value}
+          </Badge>
+        );
       })}
+      {selectedToppings?.map((topping: Topping) => (
+        <Badge
+          variant={"secondary"}
+          className=" font-extralight text-black"
+          key={topping._id}
+        >
+          {topping.name}
+        </Badge>
+      ))}
     </>
   );
 };
 
 const CartItem = ({ item }: { item: Item }) => {
+  const dispatch = useAppDispatch();
+  const handleQuantityChanger = (data: number) => {
+    dispatch(changeQty({ hash: item.itemHash as string, qty: data }));
+  };
   return (
     <>
       <div className=" flex justify-between items-center py-2 ">
@@ -61,14 +61,28 @@ const CartItem = ({ item }: { item: Item }) => {
           <div className=" flex flex-col">
             <h3 className="font-semibold">{item.product.name}</h3>
             <span className=" flex gap-2 flex-wrap mt-2 w-[80%]">
-              <ToppingsBadges />
+              <ToppingsBadges
+                selectedConfiguration={item.chosenConfiguration}
+                selectedToppings={item.selectedToppings}
+              />
             </span>
           </div>
         </div>
         <div>
-          <QuantityChanger>{cartItem.quantity}</QuantityChanger>
+          <QuantityChanger handleQuantityChanger={handleQuantityChanger}>
+            {item.qty}
+          </QuantityChanger>
         </div>
-        <div>{cartItem.price}</div>
+        <div className=" flex items-center gap-2">
+          <span>1000</span>
+          <button
+            onClick={() => {
+              dispatch(changeQty({ hash: item.itemHash as string, qty: 0 }));
+            }}
+          >
+            <X />
+          </button>
+        </div>
       </div>
       <hr />
     </>

@@ -45,9 +45,32 @@ export const cartSlice = createSlice({
     setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
       state.cartItems.push(...action.payload);
     },
+
+    changeQty: (
+      state,
+      action: PayloadAction<{ hash: string; qty: number }>
+    ) => {
+      const index = state.cartItems.findIndex(
+        (item) => item.itemHash == action.payload.hash
+      );
+
+      if (action.payload.qty == 0) {
+        state.cartItems.splice(index, 1);
+        return;
+      }
+
+      //change quantity +1 or -1
+      state.cartItems[index].qty =
+        state.cartItems[index].qty! + action.payload.qty;
+
+      window.localStorage.setItem(
+        "cartItems",
+        JSON.stringify([...state.cartItems])
+      );
+    },
   },
 });
 
-export const { addToCart, setInitialCartItems } = cartSlice.actions;
+export const { addToCart, setInitialCartItems, changeQty } = cartSlice.actions;
 
 export default cartSlice.reducer;
