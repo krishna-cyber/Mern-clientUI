@@ -1,13 +1,20 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { useMemo } from "react";
 import CartItem from "./CartItem";
 import { useAppSelector } from "@/lib/store/hooks";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
+import { calculateTotal } from "@/lib/utils";
 
-const CartItems = ({ children }: { children: ReactNode }) => {
+const CartItems = () => {
   const cartItems = useAppSelector((state) => state.cart.cartItems);
+
+  const cartTotal = useMemo(() => {
+    return cartItems.reduce((accumulator, cartItem) => {
+      return accumulator + cartItem.qty! * calculateTotal(cartItem);
+    }, 0);
+  }, [cartItems]);
 
   if (cartItems.length == 0) {
     return (
@@ -27,7 +34,10 @@ const CartItems = ({ children }: { children: ReactNode }) => {
       {cartItems.map((cartItem) => {
         return <CartItem key={cartItem.itemHash} item={cartItem} />;
       })}
-      {children}
+      <div className=" flex justify-between space-y-6">
+        <span className=" self-center">NRS. {cartTotal}</span>
+        <Button size={"sm"}>Checkout</Button>
+      </div>
     </>
   );
 };

@@ -33,3 +33,23 @@ export function hashProductCartItem(product: CartItem): string {
 
   return hashedValue;
 }
+
+export function calculateTotal(product: CartItem) {
+  const toppingTotalPrice = (product.selectedToppings ?? []).reduce(
+    (accumulator, currentValue) => {
+      return +currentValue.price + accumulator;
+    },
+    0
+  );
+
+  const totalConfigurationPrice = Object.entries(product.chosenConfiguration);
+  const totalConfigurationPrice1 = totalConfigurationPrice.reduce(
+    (accumulator, [key, value]) => {
+      const getPrice =
+        product.product.priceConfiguration[key].avilableOptions[value];
+      return +getPrice + accumulator;
+    },
+    0
+  );
+  return toppingTotalPrice + totalConfigurationPrice1;
+}
