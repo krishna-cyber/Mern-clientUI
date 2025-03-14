@@ -7,6 +7,7 @@ import { changeQty, CartItem as Item } from "@/lib/store/feature/cartSlice";
 import { Topping } from "@/lib/types";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { X } from "lucide-react";
+import { useCalculateTotal } from "@/lib/hooks/useCalculateTotal";
 
 const ToppingsBadges = ({
   selectedConfiguration,
@@ -45,6 +46,7 @@ const ToppingsBadges = ({
 
 const CartItem = ({ item }: { item: Item }) => {
   const dispatch = useAppDispatch();
+  const total = useCalculateTotal(item);
   const handleQuantityChanger = (data: number) => {
     dispatch(changeQty({ hash: item.itemHash as string, qty: data }));
   };
@@ -74,7 +76,7 @@ const CartItem = ({ item }: { item: Item }) => {
           </QuantityChanger>
         </div>
         <div className=" flex items-center gap-2">
-          <span>1000</span>
+          <span>{total * item.qty!}</span>
           <button
             onClick={() => {
               dispatch(changeQty({ hash: item.itemHash as string, qty: 0 }));
