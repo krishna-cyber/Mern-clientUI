@@ -36,7 +36,9 @@ const CartItems = () => {
       })}
       <div className=" flex justify-between space-y-6">
         <span className=" self-center">NRS. {cartTotal}</span>
-        <Button size={"sm"}>Checkout</Button>
+        <Link href={"/ordersSummary"}>
+          <Button size={"sm"}>Checkout</Button>
+        </Link>
       </div>
     </>
   );
