@@ -6,8 +6,12 @@ import { Button } from "../ui/button";
 import { Resturants } from "@/lib/types";
 import CartMenu from "./cartMenu";
 import TenantSelect from "./tenantSelect";
+import { getSession } from "@/lib/session";
 
 const Header = async () => {
+  const session = await getSession();
+  console.log(`session`, session);
+
   const response = await fetch(
     `${process.env.API_URL}/api/auth/tenants/lists`,
     {
@@ -65,7 +69,7 @@ const Header = async () => {
             <Phone className=" inline-block" />
             <p>+977-9868880218</p>
             <Button size={"sm"} className=" h-7  py-1">
-              logout
+              {session ? "Logout" : "Login"}
             </Button>
           </div>
         </div>

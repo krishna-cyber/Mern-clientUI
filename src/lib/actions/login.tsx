@@ -1,7 +1,12 @@
 "use server";
 import * as cookie from "cookie";
 import { cookies } from "next/headers";
-export async function login(previousState: any, formData: FormData) {
+interface PreviousState {
+  // Define the structure of previousState here
+  [key: string]: unknown;
+}
+
+export async function login(previousState: PreviousState, formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
   console.log(`Email:${email} and password:${password}`);
@@ -48,7 +53,7 @@ export async function login(previousState: any, formData: FormData) {
     });
     (await cookies()).set({
       name: "refreshToken",
-      value: parsedAccessToken.accessToken as string,
+      value: parsedRefreshToken.refreshToken as string,
       expires: new Date(parsedAccessToken.Expires as string),
       httpOnly: (parsedAccessToken.httpOnly as unknown as boolean) || true,
       path: parsedAccessToken.Path,
