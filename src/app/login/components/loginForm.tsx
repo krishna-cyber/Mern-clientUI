@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,11 +10,24 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useActionState } from "react";
+import { login } from "@/lib/actions/login";
+import { Loader } from "lucide-react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const initialState = {
+    type: "",
+    error: "",
+  };
+  const [state, formAction, isPending] = useActionState(login, initialState);
+
+  if (state.type == "success") {
+    window.location.href = "/";
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -24,12 +38,13 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form action={formAction}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
                   required
@@ -45,10 +60,17 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" required />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button disabled={isPending} type="submit" className="w-full">
+                {isPending ? (
+                  <div className=" flex gap-2">
+                    <Loader className=" animate-spin" />
+                    <span>Please wait ...</span>
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </Button>
               <hr />
               <Button variant="outline" className="w-full">
