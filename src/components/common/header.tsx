@@ -7,6 +7,7 @@ import { Resturants } from "@/lib/types";
 import CartMenu from "./cartMenu";
 import TenantSelect from "./tenantSelect";
 import { getSession } from "@/lib/session";
+import Logout from "./logOut";
 
 const Header = async () => {
   const session = await getSession();
@@ -68,9 +69,14 @@ const Header = async () => {
           <div className=" flex space-x-2 items-center">
             <Phone className=" inline-block" />
             <p>+977-9868880218</p>
-            <Button size={"sm"} className=" h-7  py-1">
-              {session ? "Logout" : "Login"}
-            </Button>
+
+            {session ? (
+              <Logout />
+            ) : (
+              <Button size={"sm"} className=" h-7  py-1">
+                <Link href={"/login"}>Login</Link>
+              </Button>
+            )}
           </div>
         </div>
       </nav>
