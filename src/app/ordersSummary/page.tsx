@@ -16,11 +16,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getSession } from "@/lib/session";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Apple, CreditCard } from "lucide-react";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const CheckoutPage = () => {
+const CheckoutPage = async () => {
+  const session = await getSession();
+
+  if (!session) {
+    redirect(`/login`);
+  }
+
   return (
     <section className=" container  mt-8 flex gap-4 justify-around mx-auto">
       <Card className=" w-[40%]">
@@ -38,19 +46,7 @@ const CheckoutPage = () => {
                 htmlFor="card"
                 className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="mb-3 h-6 w-6"
-                >
-                  <rect width="20" height="14" x="2" y="5" rx="2" />
-                  <path d="M2 10h20" />
-                </svg>
+                <CreditCard />
                 Card
               </Label>
             </div>
@@ -139,7 +135,7 @@ const CheckoutPage = () => {
           </div>
         </CardContent>
       </Card>
-      <Card className=" w-[40%]">
+      <Card className=" w-[40%] h-fit">
         <CardHeader>
           <CardTitle>Orders Summary</CardTitle>
         </CardHeader>
@@ -166,8 +162,13 @@ const CheckoutPage = () => {
             />{" "}
             <Button variant={"outline"}>Apply</Button>
           </div>
+          <hr></hr>
+          <span className=" flex justify-between">
+            <span>Order Total</span> <span>1000</span>
+          </span>
         </CardContent>
-        <CardFooter className=" w-full">
+
+        <CardFooter className=" py-0 w-full">
           <Button size={"sm"} className=" self-end ml-auto">
             Continue
           </Button>
