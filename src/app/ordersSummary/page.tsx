@@ -21,12 +21,15 @@ import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Apple, CreditCard } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
+type Params = Promise<{ tenantId: string }>;
 
-const CheckoutPage = async () => {
+const CheckoutPage = async ({ searchParams }: { searchParams: Params }) => {
   const session = await getSession();
 
+  const queryString = new URLSearchParams(await searchParams).toString();
+
   if (!session) {
-    redirect(`/login`);
+    redirect(`/login?${queryString}`);
   }
 
   return (

@@ -13,7 +13,7 @@ interface User {
   updatedAt: string;
 }
 
-interface Session {
+export interface Session {
   user: User;
 }
 

@@ -6,10 +6,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { calculateTotal } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 const CartItems = () => {
   const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const searchParams = useSearchParams();
 
+  const queryString = searchParams.toString();
+  const appendQuery = queryString ? `?${queryString}` : "";
   const cartTotal = useMemo(() => {
     return cartItems.reduce((accumulator, cartItem) => {
       return accumulator + cartItem.qty! * calculateTotal(cartItem);
@@ -23,7 +27,7 @@ const CartItems = () => {
           <ShoppingCart />
           Your Cart is Empty
         </h2>
-        <Link href={"/"}>
+        <Link href={`/${appendQuery}`}>
           <Button>Continue shopping</Button>
         </Link>
       </div>
@@ -36,7 +40,7 @@ const CartItems = () => {
       })}
       <div className=" flex justify-between space-y-6">
         <span className=" self-center">NRS. {cartTotal}</span>
-        <Link href={"/ordersSummary"}>
+        <Link href={`/ordersSummary${appendQuery}`}>
           <Button size={"sm"}>Checkout</Button>
         </Link>
       </div>

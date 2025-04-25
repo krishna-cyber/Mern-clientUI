@@ -1,17 +1,12 @@
 import React from "react";
 
-import Link from "next/link";
-import { Phone } from "lucide-react";
-import { Button } from "../ui/button";
 import { Resturants } from "@/lib/types";
-import CartMenu from "./cartMenu";
 import TenantSelect from "./tenantSelect";
 import { getSession } from "@/lib/session";
-import Logout from "./logOut";
+import HeaderMenu from "./headerMenu";
 
 const Header = async () => {
   const session = await getSession();
-  console.log(`session`, session);
 
   const response = await fetch(
     `${process.env.API_URL}/api/auth/tenants/lists`,
@@ -52,33 +47,7 @@ const Header = async () => {
           <TenantSelect tenants={result} />
         </div>
 
-        <div className=" flex space-x-3">
-          <ul className=" list-none flex gap-3">
-            <li>
-              <Link className="hover:text-primary" href={"/menu"}>
-                Menu
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary" href={"/ordersSummary"}>
-                Orders
-              </Link>
-            </li>
-          </ul>
-          <CartMenu />
-          <div className=" flex space-x-2 items-center">
-            <Phone className=" inline-block" />
-            <p>+977-9868880218</p>
-
-            {session ? (
-              <Logout />
-            ) : (
-              <Button size={"sm"} className=" h-7  py-1">
-                <Link href={"/login"}>Login</Link>
-              </Button>
-            )}
-          </div>
-        </div>
+        <HeaderMenu session={session} />
       </nav>
     </header>
   );

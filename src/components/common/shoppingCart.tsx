@@ -2,12 +2,17 @@ import { useAppSelector } from "@/lib/store/hooks";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 
 const CartLink = () => {
+  const searchParams = useSearchParams();
+
+  const queryString = searchParams.toString();
+  const appendQuery = queryString ? `${queryString}` : "";
   const cartItems = useAppSelector((state) => state.cart?.cartItems);
   return (
     <Link
-      href={"/cart"}
+      href={`/cart?${appendQuery}`}
       className=" relative cursor-pointer hover:text-primary"
     >
       <ShoppingCart />
