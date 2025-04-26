@@ -13,11 +13,17 @@ import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
 import { login } from "@/lib/actions/login";
 import { Loader } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirectTo")?.toString();
+
+  console.log(`redirect query`, redirect);
+
   const initialState = {
     type: "",
     error: "",
@@ -25,7 +31,7 @@ export function LoginForm({
   const [state, formAction, isPending] = useActionState(login, initialState);
 
   if (state.type == "success") {
-    window.location.href = "/";
+    window.location.href = redirect ?? "/";
   }
 
   return (

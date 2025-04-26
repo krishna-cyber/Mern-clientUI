@@ -26,10 +26,14 @@ type Params = Promise<{ tenantId: string }>;
 const CheckoutPage = async ({ searchParams }: { searchParams: Params }) => {
   const session = await getSession();
 
-  const queryString = new URLSearchParams(await searchParams).toString();
+  const sParams = new URLSearchParams(await searchParams);
+
+  const existingQueryString = sParams.toString();
+
+  sParams.append("redirectTo", `/ordersSummary?${existingQueryString}`);
 
   if (!session) {
-    redirect(`/login?${queryString}`);
+    redirect(`/login?${sParams}`);
   }
 
   return (
